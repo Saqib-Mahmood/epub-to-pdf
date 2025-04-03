@@ -33,3 +33,10 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+
+## 🔽 Download
+
+You can download the latest version of the EPUB to PDF Converter here:
+
+👉 [Download epub_to_pdf_converter.exe](https://github.com/Saqib-Mahmood/epub-to-pdf/releases/download/v1.0/epub_to_pdf_converter.exe)
