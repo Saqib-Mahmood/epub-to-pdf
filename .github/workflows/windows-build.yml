@@ -33,13 +33,13 @@ jobs:
       run: |
         python -m PyInstaller --onefile --noconsole --icon=app_icon.ico --name epub_to_pdf_converter epub_to_pdf_gui.py
 
-    - name: Clean up unnecessary build files
+    - name: Clean up temporary files
       run: |
         if exist build rmdir /s /q build
         if exist epub_to_pdf_converter.spec del epub_to_pdf_converter.spec
 
     - name: Upload Built EXE
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: epub-to-pdf-converter
         path: dist/epub_to_pdf_converter.exe
