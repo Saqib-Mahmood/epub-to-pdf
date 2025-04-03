@@ -19,7 +19,19 @@ IF %ERRORLEVEL% NEQ 0 (
     exit /b 1
 )
 
-REM Step 2: Convert PNG to .ICO
+REM Step 2: Install pyinstaller (if missing)
+pip show pyinstaller >> %LOGFILE% 2>&1
+IF %ERRORLEVEL% NEQ 0 (
+    echo 📦 Installing PyInstaller...
+    pip install pyinstaller >> %LOGFILE% 2>&1
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ❌ Failed to install PyInstaller. See %LOGFILE%
+        pause
+        exit /b 1
+    )
+)
+
+REM Step 3: Convert PNG to .ICO
 IF NOT EXIST %ICON_ICO% (
     echo 🎨 Converting %ICON_PNG% to %ICON_ICO%...
     python -c "from PIL import Image; Image.open('%ICON_PNG%').save('%ICON_ICO%', format='ICO', sizes=[(64,64)])" >> %LOGFILE% 2>&1
@@ -30,16 +42,16 @@ IF NOT EXIST %ICON_ICO% (
     )
 )
 
-REM Step 3: Build .exe
+REM Step 4: Build EXE
 echo 🔨 Building EXE with PyInstaller...
-pyinstaller --onefile --noconsole --icon=%ICON_ICO% --name %APP_NAME% %MAIN_SCRIPT% >> %LOGFILE% 2>&1
+python -m PyInstaller --onefile --noconsole --icon=%ICON_ICO% --name %APP_NAME% %MAIN_SCRIPT% >> %LOGFILE% 2>&1
 IF %ERRORLEVEL% NEQ 0 (
-    echo ❌ PyInstaller failed. See %LOGFILE%
+    echo ❌ PyInstaller build failed. See %LOGFILE%
     pause
     exit /b 1
 )
 
-REM Step 4: Cleanup
+REM Step 5: Cleanup
 echo 🧹 Cleaning up build artifacts...
 IF EXIST build rmdir /s /q build
 IF EXIST %APP_NAME%.spec del %APP_NAME%.spec

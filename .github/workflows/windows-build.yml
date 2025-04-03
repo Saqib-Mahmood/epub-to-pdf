@@ -6,32 +6,39 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-windows:
+  build:
+    name: Build EXE on Windows
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout Repository
       uses: actions/checkout@v3
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.11
+        python-version: '3.12'
 
-    - name: Install dependencies
+    - name: Install Python Dependencies
       run: |
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: Convert icon PNG to .ico
+    - name: Convert PNG to ICO
       run: |
         python -c "from PIL import Image; Image.open('icon.png').save('app_icon.ico', format='ICO', sizes=[(64,64)])"
 
-    - name: Build with PyInstaller
+    - name: Build EXE using PyInstaller
       run: |
-        pyinstaller --onefile --noconsole --icon=app_icon.ico --name epub_to_pdf_converter epub_to_pdf_gui.py
+        python -m PyInstaller --onefile --noconsole --icon=app_icon.ico --name epub_to_pdf_converter epub_to_pdf_gui.py
 
-    - name: Upload EXE as artifact
+    - name: Clean up unnecessary build files
+      run: |
+        if exist build rmdir /s /q build
+        if exist epub_to_pdf_converter.spec del epub_to_pdf_converter.spec
+
+    - name: Upload Built EXE
       uses: actions/upload-artifact@v3
       with:
         name: epub-to-pdf-converter
