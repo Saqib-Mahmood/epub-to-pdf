@@ -1,0 +1,38 @@
+name: Windows EXE Build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pyinstaller
+
+    - name: Convert icon PNG to .ico
+      run: |
+        python -c "from PIL import Image; Image.open('icon.png').save('app_icon.ico', format='ICO', sizes=[(64,64)])"
+
+    - name: Build with PyInstaller
+      run: |
+        pyinstaller --onefile --noconsole --icon=app_icon.ico --name epub_to_pdf_converter epub_to_pdf_gui.py
+
+    - name: Upload EXE as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: epub-to-pdf-converter
+        path: dist/epub_to_pdf_converter.exe
