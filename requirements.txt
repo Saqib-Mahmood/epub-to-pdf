@@ -1,0 +1,5 @@
+tk
+beautifulsoup4
+lxml
+reportlab
+pillow
