@@ -20,9 +20,9 @@ jobs:
       - name: ⚙️ Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y build-essential ccache libncurses5 libstdc++6 libffi-dev libssl-dev \
-                              libsqlite3-dev libpng-dev libjpeg-dev zlib1g-dev openjdk-11-jdk \
-                              unzip git python3-pip
+          sudo apt install -y build-essential ccache libncurses5-dev libstdc++6 \
+                              libffi-dev libssl-dev libsqlite3-dev libpng-dev libjpeg-dev \
+                              zlib1g-dev openjdk-11-jdk unzip git python3-pip
           pip install --upgrade pip Cython virtualenv
           pip install buildozer
 
