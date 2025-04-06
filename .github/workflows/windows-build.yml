@@ -2,12 +2,16 @@ name: Windows EXE Build
 
 on:
   push:
-    branches: [ main ]
+    tags:
+      - 'v*'  # Only trigger on version tags like v1.0.0
   workflow_dispatch:
+
+permissions:
+  contents: write  # Required for release uploads
 
 jobs:
   build:
-    name: Build EXE on Windows
+    name: Build and Release EXE on Windows
     runs-on: windows-latest
 
     steps:
@@ -37,8 +41,7 @@ jobs:
       run: |
         Remove-Item -Recurse -Force build, epub_to_pdf_converter.spec -ErrorAction SilentlyContinue
 
-    - name: 📤 Upload Built EXE
-      uses: actions/upload-artifact@v4
+    - name: 📤 Upload EXE to GitHub Release
+      uses: softprops/action-gh-release@v1
       with:
-        name: epub-to-pdf-converter
-        path: dist/epub_to_pdf_converter.exe
+        files: dist/epub_to_pdf_converter.exe
