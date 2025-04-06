@@ -39,5 +39,6 @@ pip install -r requirements.txt
 
 You can download the latest version of the EPUB to PDF Converter here:
 
-[![Latest Release](https://img.shields.io/github/v/release/Saqib-Mahmood/epub-to-pdf)](https://github.com/Saqib-Mahmood/epub-to-pdf/releases/latest)
+[![Latest Release](https://img.shields.io/github/v/release/Saqib-Mahmood/epub-to-pdf?label=release)](https://github.com/Saqib-Mahmood/epub-to-pdf/releases/latest)
+
 
