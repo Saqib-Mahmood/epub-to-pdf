@@ -1,37 +1,37 @@
-name: Build Kivy APK
+name: Build APK with Buildozer
 
 on:
   workflow_dispatch:
 
 jobs:
   build:
-    name: Build APK with Buildozer
     runs-on: ubuntu-latest
+    name: Kivy Android Build
 
     steps:
-    - name: 📥 Checkout Code
-      uses: actions/checkout@v3
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
 
-    - name: 🐍 Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.10
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - name: 📦 Install Buildozer + Dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y build-essential ccache libncurses5 libstdc++6 libffi-dev libssl-dev \
-                            libsqlite3-dev libpng-dev libjpeg-dev zlib1g-dev openjdk-11-jdk \
-                            unzip git python3-pip
-        pip install --upgrade pip Cython virtualenv
-        pip install buildozer
+      - name: ⚙️ Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y build-essential ccache libncurses5 libstdc++6 libffi-dev libssl-dev \
+                              libsqlite3-dev libpng-dev libjpeg-dev zlib1g-dev openjdk-11-jdk \
+                              unzip git python3-pip
+          pip install --upgrade pip Cython virtualenv
+          pip install buildozer
 
-    - name: 🤖 Build APK
-      run: |
-        buildozer android debug
+      - name: 🛠 Build APK
+        run: |
+          buildozer android debug
 
-    - name: 📤 Upload APK Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: kivy-debug.apk
-        path: bin/*.apk
+      - name: 📤 Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kivy-debug-apk
+          path: bin/*.apk
