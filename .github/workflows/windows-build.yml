@@ -3,15 +3,15 @@ name: Windows EXE Build
 on:
   push:
     tags:
-      - 'v*'  # Only trigger on version tags like v1.0.0
+      - 'v*'  # Triggers on version tags like v1.2.0
   workflow_dispatch:
 
 permissions:
-  contents: write  # Required for release uploads
+  contents: write
 
 jobs:
   build:
-    name: Build and Release EXE on Windows
+    name: Build and Release Versioned EXE
     runs-on: windows-latest
 
     steps:
@@ -23,25 +23,27 @@ jobs:
       with:
         python-version: '3.12'
 
-    - name: 📦 Install Python Dependencies
+    - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install pyinstaller
 
-    - name: 🎨 Convert PNG to ICO
+    - name: 🎨 Convert icon.png to .ico
       run: |
         python -c "from PIL import Image; Image.open('icon.png').save('app_icon.ico', format='ICO', sizes=[(64,64)])"
 
     - name: 🔨 Build EXE using PyInstaller
       run: |
-        python -m PyInstaller --onefile --noconsole --icon=app_icon.ico --name epub_to_pdf_converter epub_to_pdf_gui.py
+        $version = "${{ github.ref_name }}"  # example: v1.2.0
+        $output = "epub_converter_${version}.exe"
+        python -m PyInstaller --onefile --noconsole --icon=app_icon.ico --name "$output" epub_to_pdf_gui.py
 
-    - name: 🧹 Clean up temporary files
+    - name: 🧹 Clean up build artifacts
       run: |
-        Remove-Item -Recurse -Force build, epub_to_pdf_converter.spec -ErrorAction SilentlyContinue
+        Remove-Item -Recurse -Force build, *.spec -ErrorAction SilentlyContinue
 
-    - name: 📤 Upload EXE to GitHub Release
+    - name: 🚀 Upload to GitHub Release
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/epub_to_pdf_converter.exe
+        files: dist/epub_converter_*.exe
